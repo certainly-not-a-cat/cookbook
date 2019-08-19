@@ -16,7 +16,7 @@ a:hover {
 }
 
 .clicky {
-	cursor: pointer;	
+	cursor: pointer;
 }
 
 .pagenum:hover {
@@ -28,7 +28,7 @@ a:hover {
 	z-index: 2;
 	overflow: hidden;
 	left: 0px;
-	width: 100%;	
+	width: 100%;
 }
 
 #pageHeader {
@@ -39,15 +39,20 @@ a:hover {
 	bottom: 0px;
 }
 
-#data-headers, #data-container, #filters {
+#data-headers, #data-container, #filters, #title-headers {
 	width: 890px;
 }
 
-#data-headers {
+#data-headers, #title-headers {
 	height: 24px;
 	margin: 8px auto 0px auto;
 }
 
+	#title-headers>* {
+		display: inline-block;
+		text-align: center !important;
+		float: left;
+	}
 	#data-headers>*	{
 		display: inline-block;
 		text-align: center !important;
@@ -63,6 +68,10 @@ a:hover {
 		cursor: pointer;
 	}
 
+	#title-headers .hddr {
+		font-size: 18pt;
+		width: 50%;
+	}
 	span.sublabel {
 		font-size: 10pt !important;
 		line-height: 0.2em;
@@ -72,7 +81,7 @@ a:hover {
 	}
 
 #data-container {
-	padding-top: 32px;
+	padding-top: 64px;
 	padding-bottom: 110px;
 	margin: 0px auto 0px auto;
 }
