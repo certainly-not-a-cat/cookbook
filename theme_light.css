@@ -32,7 +32,6 @@ body *
 	color: #000 !important;
 }
 
-
 #pageHeader, #pageBottom
 {
 	background-color: #FFF;
@@ -117,4 +116,8 @@ body *
 #fields_middle :-ms-input-placeholder
 {
 	color: #AAA;
+}
+
+#title-headers .world .active {
+	color: #0000FF;
 }

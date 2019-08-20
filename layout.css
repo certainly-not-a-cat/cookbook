@@ -47,8 +47,11 @@ a:hover {
 	height: 24px;
 	margin: 8px auto 0px auto;
 }
+	#title-headers .world {
+		width: 50%;
+	}
 
-	#title-headers>* {
+	#title-headers .world >* {
 		display: inline-block;
 		text-align: center !important;
 		float: left;
@@ -64,13 +67,13 @@ a:hover {
 		font-size: 12pt;
 	}
 
-	#data-headers .hdr {
-		cursor: pointer;
-	}
-
 	#title-headers .hddr {
 		font-size: 18pt;
 		width: 50%;
+	}
+
+	#data-headers .hdr {
+		cursor: pointer;
 	}
 	span.sublabel {
 		font-size: 10pt !important;

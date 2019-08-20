@@ -366,7 +366,7 @@ function resetFields() {
   var filters = document.getElementById("fields_middle").childNodes;
   for (var i = 0; i < filters.length; i++)
     if (filters[i].nodeName = "#text") filters[i].value = "";
-  refreshView();
+  handleView();
 }
 
 function sortFloat(data, rowA, rowB, colN) {
@@ -637,7 +637,7 @@ function processQuery() { //process additional options from URL string
 }
 
 function applyParams() {
-console.log(search);
+
   if(search.filterFood.length > 0) {
     document.getElementById("filterFood").value = search.filterFood;
   }
@@ -647,7 +647,23 @@ console.log(search);
   if(search.filterFEP.length > 0) {
     document.getElementById("filterFEP").value = search.filterFEP;
   }
+
+  document.getElementsByClassName('hddr world-source active').item(0).classList.remove("active");
+  document.getElementById("t-world-" + opts.defaultData).classList.add('active');
+
+  searchToHash()
 }
+
+function searchToHash() {
+  search.world = opts.defaultData;
+  search.filterFood = document.getElementById("filterFood").value;
+  search.filterIng = document.getElementById("filterIng").value;
+  search.filterFEP = document.getElementById("filterFEP").value;
+
+  var params = Object.assign({world: opts.defaultData}, search);
+  window.location.hash = Object.keys(params).reduce(function(a,k){a.push(k+'='+encodeURIComponent(params[k]));return a},[]).join('&');
+}
+
 
 function storeOptions(options) {
   //Store options in cookie
@@ -688,14 +704,14 @@ function addEL() {
           break;
         case 13 : //Enter
           event.preventDefault();
-          refreshView();
+          document.getElementById("btnSearch").click();
           break;
         default : return;
       }
   });
 
   document.getElementById("btnReset").addEventListener("click", resetFields);
-  document.getElementById("btnSearch").addEventListener("click", refreshView);
+  document.getElementById("btnSearch").addEventListener("click", handleView);
 
   var headersEls = document.getElementsByClassName("hdr");
   for (var i = 0; i < headersEls.length; i++) {
@@ -704,15 +720,36 @@ function addEL() {
     });
   }
 
-  window.addEventListener("hashchange", function () {
-    console.log("hashCHANGE!!!!!");
+  window.addEventListener("hashchange", function (event) {
+    if(event.oldURL  == event.newURL) return;
+    hashToSearch()
+    applyParams()
+    handleView()
   });
+}
+
+function handleView() {
+  searchToHash()
+  refreshView()
 }
 
 function main() {
   processQuery();
+  hashToSearch()
   applyParams();
   applyTheme();
   addEL();
   loadDataFromTables(staticData);
+}
+
+function hashToSearch() {
+  window.location.hash.substring(1).split("&").map((a) => {
+    var param = a.split("=");
+    if(search.hasOwnProperty(param[0])) {
+      search[param[0]] = decodeURIComponent(param[1]);
+    } else if(param[0] == 'world') {
+      opts.defaultData = param[1];
+    }
+  });
+  document.getElementById("btnSearch").click();
 }
