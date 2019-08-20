@@ -594,13 +594,15 @@ function applyTheme() {
 }
 
 function parseQuery() { //parses query string
-  var querystring = window.location.href.split("?")[1];
+  var location = document.createElement('a');
+  location.href = window.location.href
+  var querystring = location.search.split("?")[1];
   return (querystring == undefined) ? "" : querystring;
 }
 
 function parseRows(data, separator) {
   var list = {};
-  if(data.length <= 0) return list;
+  if(data == undefined || data.length <= 0) return list;
   var pairs = data.split(separator).map(function(value) {return value.trim().split("=");});
   for (var i = 0; i < pairs.length; i++) list[pairs[i][0]] = pairs[i][1];
   return list;
@@ -633,6 +635,10 @@ function processQuery() { //process additional options from URL string
   if (optionlist.limit) {
     var limitNum = parseInt(optionlist.limit);
     if (!isNaN(limitNum)) opts.limit = Math.max(limitNum, 30);
+  }
+  console.log(querystring);
+  if(querystring.length > 0) {
+    window.location = window.location.pathname + window.location.hash;
   }
 }
 
