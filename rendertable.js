@@ -636,7 +636,6 @@ function processQuery() { //process additional options from URL string
     var limitNum = parseInt(optionlist.limit);
     if (!isNaN(limitNum)) opts.limit = Math.max(limitNum, 30);
   }
-  console.log(querystring);
   if(querystring.length > 0) {
     window.location = window.location.pathname + window.location.hash;
   }
@@ -752,10 +751,10 @@ function hashToSearch() {
   window.location.hash.substring(1).split("&").map((a) => {
     var param = a.split("=");
     if(search.hasOwnProperty(param[0])) {
+      if(param[1].length <= 0) return;
       search[param[0]] = decodeURIComponent(param[1]);
     } else if(param[0] == 'world') {
       opts.defaultData = param[1];
     }
   });
-  document.getElementById("btnSearch").click();
 }
