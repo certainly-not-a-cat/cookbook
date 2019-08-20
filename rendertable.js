@@ -753,8 +753,9 @@ function hashToSearch() {
     if(search.hasOwnProperty(param[0])) {
       if(param[1].length <= 0) return;
       search[param[0]] = decodeURIComponent(param[1]);
-    } else if(param[0] == 'world') {
-      opts.defaultData = param[1];
+      if(param[0] == 'world') {
+        opts.defaultData = param[1];
+      }
     }
   });
 }
