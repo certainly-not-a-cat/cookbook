@@ -129,7 +129,11 @@ function parseIng(arrIng) {
     dvI.classList.add(formatVal(arrIng[k1], "aztext"));
     dvI.classList.add("ing-single");
     dvI.appendChild(tnIng);
-    result.appendChild(dvI);
+
+    var a = linkWiki(arrIng[k1]);
+    a.target = "_blank";
+    a.innerHTML = dvI.outerHTML;
+    result.appendChild(a);
   }
   return result;
 }
