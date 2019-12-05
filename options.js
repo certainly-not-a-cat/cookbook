@@ -1,7 +1,7 @@
 var basicURL = "http://www.havenandhearth.com/mt/r/gfx/invobjs/";
 var wikiURL = "http://ringofbrodgar.com/wiki/";
 var table = document.getElementById("data");
-var opts = { theme : "light", debug : false, limit : 50, textmode : false, defaultData : "w10" };
+var opts = { theme : "light", debug : false, limit : 50, textmode : false, defaultData : "w11" };
 var strictMatch = ["beef", "asp", "bream", "horse", "goat", "mutton", "troll", "venison", "beetroot", "ant"];
 // var search = { filterFood : "", filterIng : '-troll', filterFEP  : 'wil2 3-max 30-100%' };
 var search = { world: opts.defaultData, filterFood : "", filterIng : '', filterFEP  : '' };

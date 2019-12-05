@@ -40,7 +40,7 @@ a:hover {
 }
 
 #data-headers, #data-container, #filters, #title-headers {
-	width: 890px;
+	width: 1040px;
 }
 
 #data-headers, #title-headers {
@@ -144,6 +144,10 @@ a:hover {
 	text-align: center;
 }
 
+#data td:nth-child(8), #data-headers div:nth-child(8) {
+	width: 150px;
+}
+
 #data .fep-list {
 	width: 325px;
 }
@@ -192,6 +196,30 @@ a:hover {
 	font-family: 'SourceSansProRegular', sans-serif;
 	font-size: 9pt;
 }
+
+#data .sat-list {
+	width: 150px;
+	display: block;
+}
+
+#data .sat-single>*{
+	float: left;
+	padding-left: 2px;
+	line-height: 7pt;
+	font-family: 'SourceSansProRegular', sans-serif;
+	font-size: 9pt;
+}
+
+#data .sat-single {
+	clear: both;
+}
+
+.sat-d {
+	font-size: 6pt !important;
+	padding-top: 0.4pt !important;
+	line-height: 6pt !important;
+}
+
 
 /* ------------------------------------*/
 /* ----------- 	Pagination 	---------- */
@@ -254,11 +282,13 @@ a:hover {
 }
 
 #fields_middle {
-	width: 736px;
+	/*width: 736px;*/
+	width: 886px;
 }
 
 #filterFood, #filterIng {
-	width: 360px;
+	/*width: 360px;*/
+	width: 435px;
 }
 
 #filterFood, #filterIng, #filterFEP {
@@ -270,5 +300,6 @@ a:hover {
 }
 
 #filterFEP {
-	width: 734px;
+	/*width: 734px;*/
+	width: 884px;
 }
