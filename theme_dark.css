@@ -28,9 +28,6 @@ svg * {
 	stroke: #BBB;
 }
 
-
-
-
 #pageHeader, #pageBottom
 {
 	background-color: #111;
@@ -39,7 +36,7 @@ svg * {
 
 #data th 
 {
-	color: color: #FFF !important;
+	color: #FFF !important;
 }
 
 #data-headers .hdr:hover
@@ -163,4 +160,8 @@ svg * {
 #fields_middle input :-ms-input-placeholder  
 {
 	color: #888;
+}
+
+#title-headers .world .active {
+	color: #0000FF;
 }

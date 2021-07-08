@@ -128,7 +128,11 @@ function parseIng(arrIng) {
     dvI.classList.add(formatVal(arrIng[k1], "aztext"));
     dvI.classList.add("ing-single");
     dvI.appendChild(tnIng);
-    result.appendChild(dvI);
+
+    var a = linkWiki(arrIng[k1]);
+    a.target = "_blank";
+    a.innerHTML = dvI.outerHTML;
+    result.appendChild(a);
   }
   return result;
 }
@@ -184,7 +188,7 @@ function prepareFilterFEP(inputString) {
   if (inputString.length == 0) return res;
 
   var inputArray = inputString.toLowerCase().replace(/[^a-z0-9\-\ \,\.\%]/g, "").replace(/\ +/g, " ").split(", "); //purge and comma+space split into array
-  
+
   for (var inputIndex = 0; inputIndex < inputArray.length; inputIndex++) {
     var dataObj = {
       "atrName" : "",
@@ -195,7 +199,7 @@ function prepareFilterFEP(inputString) {
     }
     var singleSubString = inputArray[inputIndex].trim();
     var singleSubArray = singleSubString.split(" ");
-    
+
     //validating subarray lenght input
     if ((singleSubArray.length < 2) || (singleSubArray.length > 3)) {
       console.log("Bad argument array length = " + singleSubArray.length + " at FEP input #" + (inputIndex+1) );
@@ -227,7 +231,7 @@ function prepareFilterFEP(inputString) {
     var rangeValB = null;
     var rangePrcA = null;
     var rangePrcB = null;
-    
+
     for (var argIndex = 1; argIndex < singleSubArray.length; argIndex++) {
       var rangeString = singleSubArray[argIndex];
       if (rangeString.indexOf("-") == -1) {
@@ -292,7 +296,7 @@ function prepareData(array, target) {
       PageState.SearchRequest.Ingr.incl.push(sprtdFoodIngr);
     }
   }
-  //food ingr filter end  
+  //food ingr filter end
 
   PageState.SearchRequest.FEPs = prepareFilterFEP(document.getElementById("filterFEP").value);
 
@@ -311,7 +315,7 @@ function prepareData(array, target) {
   var temp = [];
   for (var i = 0; i < array.length; i++) {
     var exclude = false; //unhide every row
-    
+
 
     //filter by name
     var itemName = array[i][0];
@@ -365,7 +369,7 @@ function prepareData(array, target) {
       searchFEPObject = PageState.SearchRequest.FEPs[fepsIndex];
       if ( (searchFEPObject == undefined) || (searchFEPObject.atrName == "") ) continue;
       var itemFEPObject = array[i][2];
-      
+
       var FEPFound = ( ( (searchFEPObject.valMin == null) || (searchFEPObject.valMin == 0) ) &&
        ( (searchFEPObject.perMin == null) || (searchFEPObject.perMin == 0) ) ? true : false );
       var valMinMatch = ( (searchFEPObject.valMin == null) || (searchFEPObject.valMin == 0) ? true : false );
@@ -403,7 +407,7 @@ function resetFields() {
   var filters = document.getElementById("fields_middle").childNodes;
   for (var i = 0; i < filters.length; i++)
     if (filters[i].nodeName = "#text") filters[i].value = "";
-  refreshView();
+  handleView();
 }
 
 function sortFloat(data, rowA, rowB, colN) {
@@ -425,7 +429,7 @@ function renderTable(array) {
     sortIndexes.push(i);
   }
   switch (PageState.Sorting.col) {
-    case "food": 
+    case "food":
       sortIndexes.sort( function(a, b) {
         if (array[a][0] == array[b][0]) return 0;
         if (PageState.Sorting.order == "A") {
@@ -435,16 +439,16 @@ function renderTable(array) {
         }
       } );
       break;
-    case "f": 
+    case "f":
       sortIndexes.sort( function(a, b) { return sortFloat(array, a, b, 3); });
       break;
-    case "h": 
+    case "h":
       sortIndexes.sort(function(a, b) { return sortFloat(array, a, b, 4); });
       break;
-    case "fh": 
+    case "fh":
       sortIndexes.sort(function(a, b) { return sortFloat(array, a, b, 5); });
       break;
-    case "chance": 
+    case "chance":
       sortIndexes.sort(function(a, b) { return sortFloat(array, a, b, 6); });
       break;
     }
@@ -551,16 +555,16 @@ function renderTable(array) {
   }
 
   if (PageNumbersBL.length !== 0) {
-    for (var j = 0; j < PageNumbersBL.length; j++) 
+    for (var j = 0; j < PageNumbersBL.length; j++)
       divPageNumbers.appendChild(paginationNewPagelink(PageNumbersBL[j], "bl"));
     divPageNumbers.appendChild(paginationNewSeparator());
   }
-  
+
   for (var j = 0; j < PageNumbersBS.length; j++)
       divPageNumbers.appendChild(paginationNewPagelink(PageNumbersBS[j], "bs"));
-  
+
     divPageNumbers.appendChild(paginationNewPagelink(PageState.PageNumber, "current"));
-  
+
   for (var j = 0; j < PageNumbersAS.length; j++)
       divPageNumbers.appendChild(paginationNewPagelink(PageNumbersAS[j], "as"));
 
@@ -569,7 +573,7 @@ function renderTable(array) {
     for (var j = 0; j < PageNumbersAL.length; j++)
       divPageNumbers.appendChild(paginationNewPagelink(PageNumbersAL[j], "al"));
   }
-  
+
   if (PageNumbersAL[PageNumbersAL.length-1] != pageAmount && PageNumbersAS[PageNumbersAS.length-1] != pageAmount && PageState.PageNumber != pageAmount) {
     divPageNumbers.appendChild(paginationNewSeparator());
     divPageNumbers.appendChild(paginationNewPagelink(pageAmount, "last"));
@@ -636,14 +640,28 @@ function applyTheme() {
   document.head.appendChild(themeStyle);
 }
 
-function processQuery() { //parses additional options from URL string
-  var querystring = window.location.href.split("?")[1];
-  if (!querystring) return;
-  if (querystring.length == 0) return;
+function parseQuery() { //parses query string
+  var location = document.createElement('a');
+  location.href = window.location.href
+  var querystring = location.search.split("?")[1];
+  return (querystring == undefined) ? "" : querystring;
+}
 
-  var optionlist = {};
-  var pairs = querystring.split("&");
-  for (var i = 0; i < pairs.length; i++) optionlist[pairs[i].split("=")[0]] = pairs[i].split("=")[1];
+function parseRows(data, separator) {
+  var list = {};
+  if(data == undefined || data.length <= 0) return list;
+  var pairs = data.split(separator).map(function(value) {return value.trim().split("=");});
+  for (var i = 0; i < pairs.length; i++) list[pairs[i][0]] = pairs[i][1];
+  return list;
+}
+
+function processQuery() { //process additional options from URL string
+  var querystring = parseQuery();
+  var queryoptions = parseRows(querystring, "&")
+  var cookies = parseRows(document.cookie, ";")
+
+  var optionlist = Object.assign({}, cookies, queryoptions);
+  storeOptions(optionlist);
 
   if (optionlist.debug == "true") {
     opts.debug = true;
@@ -657,14 +675,51 @@ function processQuery() { //parses additional options from URL string
     opts.textmode = false;
   }
 
-  if (optionlist.theme == "dark") opts.theme = "dark";   
+  if (optionlist.theme == "dark") opts.theme = "dark";
 
   if (optionlist.source == "w10") opts.defaultData = "w10";
 
   if (optionlist.limit) {
     var limitNum = parseInt(optionlist.limit);
     if (!isNaN(limitNum)) opts.limit = Math.max(limitNum, 30);
-  } 
+  }
+  if(querystring.length > 0) {
+    window.location = window.location.pathname + window.location.hash;
+  }
+}
+
+function applyParams() {
+
+  if(search.filterFood.length > 0) {
+    document.getElementById("filterFood").value = search.filterFood;
+  }
+  if(search.filterIng.length > 0) {
+    document.getElementById("filterIng").value = search.filterIng;
+  }
+  if(search.filterFEP.length > 0) {
+    document.getElementById("filterFEP").value = search.filterFEP;
+  }
+
+  document.getElementsByClassName('hddr world-source active').item(0).classList.remove("active");
+  document.getElementById("t-world-" + opts.defaultData).classList.add('active');
+
+  searchToHash()
+}
+
+function searchToHash() {
+  search.world = opts.defaultData;
+  search.filterFood = document.getElementById("filterFood").value;
+  search.filterIng = document.getElementById("filterIng").value;
+  search.filterFEP = document.getElementById("filterFEP").value;
+
+  var params = Object.assign({world: opts.defaultData}, search);
+  window.location.hash = Object.keys(params).reduce(function(a,k){a.push(k+'='+encodeURIComponent(params[k]));return a},[]).join('&');
+}
+
+
+function storeOptions(options) {
+  //Store options in cookie
+  for(opt in options) document.cookie = [opt, options[opt]].join("=");
 }
 
 function sortTable(sender) {
@@ -674,7 +729,7 @@ function sortTable(sender) {
   if (newSorting == PageState.Sorting.col) {
     PageState.Sorting.order = switchOrder();;
   } else {
-    PageState.Sorting.col = newSorting;  
+    PageState.Sorting.col = newSorting;
     PageState.Sorting.order = defaultOrder();
   }
 
@@ -701,14 +756,14 @@ function addEL() {
           break;
         case 13 : //Enter
           event.preventDefault();
-          refreshView();
+          document.getElementById("btnSearch").click();
           break;
         default : return;
       }
-    });
+  });
 
   document.getElementById("btnReset").addEventListener("click", resetFields);
-  document.getElementById("btnSearch").addEventListener("click", refreshView);
+  document.getElementById("btnSearch").addEventListener("click", handleView);
 
   var headersEls = document.getElementsByClassName("hdr");
   for (var i = 0; i < headersEls.length; i++) {
@@ -716,11 +771,38 @@ function addEL() {
       sortTable(this.id);
     });
   }
+
+  window.addEventListener("hashchange", function (event) {
+    if(event.oldURL  == event.newURL) return;
+    hashToSearch()
+    applyParams()
+    handleView()
+  });
+}
+
+function handleView() {
+  searchToHash()
+  refreshView()
 }
 
 function main() {
   processQuery();
+  hashToSearch()
+  applyParams();
   applyTheme();
   addEL();
   loadDataFromTables(staticData);
+}
+
+function hashToSearch() {
+  window.location.hash.substring(1).split("&").map((a) => {
+    var param = a.split("=");
+    if(search.hasOwnProperty(param[0])) {
+      if(param[1].length <= 0) return;
+      search[param[0]] = decodeURIComponent(param[1]);
+      if(param[0] == 'world') {
+        opts.defaultData = param[1];
+      }
+    }
+  });
 }
